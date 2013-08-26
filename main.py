@@ -28,6 +28,8 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 		# Resizing Part
 		img = images.Image(blob_key=resource)
 		img.resize(width=1000)
+		img.crop(left_x=0.3, top_y=0.3, right_x=0.8, bottom_y=0.7)
+		img.rotate(90)
 		img.im_feeling_lucky()
 		image = img.execute_transforms(output_encoding=images.JPEG)
 
