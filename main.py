@@ -2,6 +2,7 @@ import os
 import urllib
 import webapp2
 
+from google.appengine.api import images # import images to manipulate images
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 
@@ -18,11 +19,24 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
 		blob_info = upload_files[0]
 		self.redirect('serve/%s' % blob_info.key()) # serving image with blob key
 
+# Here is the handler to serving the image
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 	def get(self, resource):
 		resource = str(urllib.unquote(resource))
 		blob_info = blobstore.BlobInfo.get(resource)
-		self.send_blob(blob_info)
+
+		# Resizing Part
+		img = images.Image(blob_key=blob_key)
+		img = resize(width=80, height=120)
+		img.im_feeling_lucky()
+		image = img.excute_transforms(output_encoding=images.JPEG)
+
+		self.response.headers['Content-Type'] = 'image/jpeg'
+		self.response.out.write(image)
+
+		return
+
+# app
 app = webapp2.WSGIApplication([('/', MainHandler),
 	                       ('/upload', UploadHandler),
 			       ('/serve/([^/]+)?',ServeHandler)],
