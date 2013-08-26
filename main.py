@@ -26,10 +26,10 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 		blob_info = blobstore.BlobInfo.get(resource)
 
 		# Resizing Part
-		img = images.Image(blob_key=blob_key)
-		img = resize(width=80, height=120)
+		img = images.Image(blob_key=resource)
+		img.resize(width=1000)
 		img.im_feeling_lucky()
-		image = img.excute_transforms(output_encoding=images.JPEG)
+		image = img.execute_transforms(output_encoding=images.JPEG)
 
 		self.response.headers['Content-Type'] = 'image/jpeg'
 		self.response.out.write(image)
